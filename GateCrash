@@ -1,29 +1,21 @@
 ﻿Introduction
 
-
 The box gives us a login prompt with fields of username and password.
 At first i entered just random credentials and keeps giving me “browser not supported”.
 Something does not feel right. Thankfully HackTheBox provides us with the machines files.
 I inspected the files and found some things.
 
-
-
-
-
-
-
-
 *The code given below is from main.vim. It describes a check for sql injection vulnerability*
 
-
-*proc containsSqlInjection(input: string): bool =
+'''vim
+proc containsSqlInjection(input: string): bool =
   for c in input:
         let ordC = ord(c)
         if not ((ordC >= ord('a') and ordC <= ord('z')) or
                 (ordC >= ord('A') and ordC <= ord('Z')) or
                 (ordC >= ord('0') and ordC <= ord('9'))):
           return true
-  return false*
+  return false
 
 
 While further inspecting the code i found that a vulnerability lies in a function called *decodeurl*. This function decodes the user-agent header. But it does not properly validate or sanitize the decoded value. This allows an attacker to inject CRLF characters to bypass the SQLInjection check.
